@@ -1,0 +1,62 @@
+# Project context: {{projectName}}
+
+This file is read by every agent and skill before they act. It is the single source of
+truth for project-specific stack, conventions, and domain knowledge. Keep it current.
+
+## Stack
+
+- **Primary language:** {{primaryLanguage}}
+- **Package managers:** {{packageManagers}}
+- **Frameworks:** {{frameworks}}
+- **Test frameworks:** {{testFrameworks}}
+- **CI/CD:** {{ci}}
+- **Deploy targets:** {{deployTargets}}
+- **IaC tools:** {{iacTools}}
+- **Has frontend:** {{hasFrontend}}
+
+## Documentation locations
+
+- **README:** {{readme}}
+- **Contributing guide:** {{contributing}}
+- **Docs directory:** {{docsDir}}
+- **PRDs:** `docs/prd-*.md`
+- **Runbook:** `docs/runbook.md`
+- **Data model:** `docs/data-model.md`
+- **Design system:** `docs/design-system.md`
+
+## Conventions
+
+Fill in the project's conventions here. Examples:
+
+- **Code style:** (e.g. "Google TypeScript Style Guide — see https://google.github.io/styleguide/tsguide.html")
+- **Commit message format:** (e.g. "Conventional Commits — feat/fix/chore/docs/refactor")
+- **Branch naming:** (e.g. "feature/*, bugfix/*, hotfix/*")
+- **PR size guideline:** (e.g. "under 400 lines changed")
+- **Review priorities:** (e.g. "correctness, security, performance, readability, style")
+
+## Domain
+
+- **Primary users:** {{primaryUser}}
+- **Domain:** {{domain}}
+- **Style guide:** {{styleGuide}}
+
+Fill in the rest as the project crystallises:
+
+- **Core entities:** The main data models (e.g. "users, orders, invoices")
+- **Key workflows:** The main business processes (e.g. "order fulfilment, billing cycle")
+- **Status vocabularies:** Domain-specific status transitions
+- **Regulatory / compliance:** Any requirements that shape the product
+
+## Guardrails
+
+Project-specific things the agents must never do, or must always do. Examples:
+
+- Never commit secrets, `.env` files, or API keys
+- All async functions must have error handling
+- All external API calls wrapped in try/catch with meaningful error messages
+- Money stored as integer cents, never floats
+- Timestamps always in UTC
+
+## Notes
+
+Free-form notes about the project — recent decisions, known tech debt, open questions.

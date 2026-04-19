@@ -1,0 +1,631 @@
+[
+  {
+    "id": "ts-strict-typing",
+    "title": "TypeScript strict typing",
+    "category": "code",
+    "tags": ["typescript", "types"],
+    "description": "Ban `any`, require explicit return types on exports.",
+    "defaultPaths": ["**/*.ts", "**/*.tsx"],
+    "questions": [],
+    "rules": [
+      "Do not use `any` — use `unknown` and narrow at the boundary.",
+      "All exported functions have explicit return types.",
+      "Prefer `interface` over `type` for object shapes.",
+      "Use `readonly` on immutable fields."
+    ],
+    "reason": "`any` disables the type system. Explicit return types make refactors safe.",
+    "goodExample": {
+      "language": "ts",
+      "code": "export function parse(input: unknown): Result<User, Error> { /* narrow then return */ }"
+    },
+    "badExample": {
+      "language": "ts",
+      "code": "export function parse(input: any) { return input as User; }"
+    }
+  },
+  {
+    "id": "ts-file-length",
+    "title": "TypeScript file length limit",
+    "category": "code",
+    "tags": ["typescript", "structure"],
+    "description": "Cap source file size to enforce single responsibility.",
+    "defaultPaths": ["src/**/*.ts", "src/**/*.tsx"],
+    "questions": [
+      {
+        "id": "max_lines",
+        "prompt": "Maximum lines per file",
+        "type": "choice",
+        "choices": ["150", "200", "300", "500"],
+        "default": "200"
+      }
+    ],
+    "rules": [
+      "Source files must not exceed {{max_lines}} lines.",
+      "Long files almost always indicate multiple responsibilities — split before you hit the limit."
+    ],
+    "reason": "A line budget keeps files focused and easier to review."
+  },
+  {
+    "id": "ts-async-error-handling",
+    "title": "TypeScript async error handling",
+    "category": "code",
+    "tags": ["typescript", "error-handling"],
+    "description": "Wrap async calls in try/catch with contextual error messages.",
+    "defaultPaths": ["**/*.ts", "**/*.tsx"],
+    "questions": [],
+    "rules": [
+      "Every `await` that can reject must be in a try/catch OR returned from a function that documents it throws.",
+      "Error messages must include operation name and relevant parameters.",
+      "Never silently swallow errors with empty catch blocks."
+    ],
+    "reason": "Unhandled rejections crash the process. Silent catches mask production incidents.",
+    "goodExample": {
+      "language": "ts",
+      "code": "try {\n  const res = await fetch(url);\n  if (!res.ok) throw new Error(`fetch ${url} returned ${res.status}`);\n  return await res.json();\n} catch (err) {\n  throw new Error(`loadUser(${userId}) failed: ${(err as Error).message}`);\n}"
+    }
+  },
+  {
+    "id": "js-no-var",
+    "title": "No `var` in JavaScript",
+    "category": "code",
+    "tags": ["javascript", "variables"],
+    "description": "Always use `const`/`let`; `var`'s function-scoping causes bugs.",
+    "defaultPaths": ["**/*.js", "**/*.jsx", "**/*.mjs"],
+    "questions": [],
+    "rules": [
+      "Use `const` by default; `let` only when reassignment is required.",
+      "Never use `var` — its function-scoping and hoisting produce subtle bugs."
+    ],
+    "reason": "Block-scoping (`let`/`const`) catches unintended variable reuse at declaration time."
+  },
+  {
+    "id": "js-strict-equality",
+    "title": "Strict equality (=== / !==) only",
+    "category": "code",
+    "tags": ["javascript", "comparison"],
+    "description": "Never use `==` or `!=`.",
+    "defaultPaths": ["**/*.js", "**/*.jsx", "**/*.mjs"],
+    "questions": [],
+    "rules": [
+      "Always use `===` and `!==`. Never `==` or `!=`.",
+      "Use `Object.is` for NaN-aware equality when needed."
+    ],
+    "reason": "Loose equality triggers implicit coercion (`[] == false` is true) — a reliable source of defects."
+  },
+  {
+    "id": "js-async-await",
+    "title": "async/await over `.then()` chains",
+    "category": "code",
+    "tags": ["javascript", "typescript", "async"],
+    "description": "Prefer async/await for readability and stack traces.",
+    "defaultPaths": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+    "questions": [],
+    "rules": [
+      "Use `async`/`await` as the default for asynchronous operations.",
+      "Chain `.then()` only when integrating with a callback-returning API or inside a `Promise.all` pipeline.",
+      "Always `await` inside try/catch when the promise can reject."
+    ],
+    "reason": "Await-chains produce linear stack traces and avoid callback-pyramid nesting."
+  },
+  {
+    "id": "go-error-return-checked",
+    "title": "Never discard `error` returns (Go)",
+    "category": "code",
+    "tags": ["go", "error-handling"],
+    "description": "Every returned error must be inspected, handled, or wrapped.",
+    "defaultPaths": ["**/*.go"],
+    "questions": [],
+    "rules": [
+      "Every function returning `error` must have its error checked — no `_` discards without a comment explaining why.",
+      "Wrap errors with context using `fmt.Errorf(\"operation X: %w\", err)`.",
+      "Return early on errors — avoid deeply nested happy paths."
+    ],
+    "reason": "Go's error model is explicit; silent discards turn into production incidents."
+  },
+  {
+    "id": "go-no-panic",
+    "title": "No `panic` in library or handler code (Go)",
+    "category": "code",
+    "tags": ["go", "error-handling"],
+    "description": "Panics only in `main` or truly unrecoverable init failures.",
+    "defaultPaths": ["**/*.go"],
+    "questions": [],
+    "rules": [
+      "Never `panic` from library or HTTP-handler code — return an error instead.",
+      "`panic` is acceptable in `init()` if the program cannot function (e.g. missing required env var).",
+      "Use `recover` only at a clear boundary (e.g. HTTP handler top) and log the panic before returning 500."
+    ],
+    "reason": "Panics bubble to goroutine termination, often taking the server down with them."
+  },
+  {
+    "id": "go-context-cancel",
+    "title": "Accept `context.Context` on I/O (Go)",
+    "category": "code",
+    "tags": ["go", "context", "io"],
+    "description": "Any function that performs I/O takes `ctx` as first arg.",
+    "defaultPaths": ["**/*.go"],
+    "questions": [],
+    "rules": [
+      "Functions performing I/O, blocking, or long-running work accept `ctx context.Context` as the first parameter.",
+      "Propagate `ctx` to downstream calls; never use `context.TODO()` outside of tests or new-code stubs.",
+      "Check `ctx.Done()` in long loops and return when cancelled."
+    ],
+    "reason": "Cancellation propagation is the only way to stop wasted work in a fan-out system."
+  },
+  {
+    "id": "rust-no-unwrap",
+    "title": "No `.unwrap()` or `.expect()` in production (Rust)",
+    "category": "code",
+    "tags": ["rust", "error-handling"],
+    "description": "Handle `Option`/`Result` explicitly.",
+    "defaultPaths": ["src/**/*.rs"],
+    "questions": [],
+    "rules": [
+      "Do not call `.unwrap()` or `.expect()` outside of tests and build scripts.",
+      "Use `?` propagation, `match`, `.ok_or(...)`, or `.unwrap_or(...)`.",
+      "If a value is provably not `None`, document the invariant in a comment."
+    ],
+    "reason": "Unwrap panics are ergonomic shortcuts that turn into 3am pages."
+  },
+  {
+    "id": "rust-prefer-result",
+    "title": "Prefer `Result` over panic for recoverable errors (Rust)",
+    "category": "code",
+    "tags": ["rust", "error-handling"],
+    "description": "Model failures as `Result`; panic only for invariant violations.",
+    "defaultPaths": ["**/*.rs"],
+    "questions": [],
+    "rules": [
+      "Fallible functions return `Result<T, E>` — not `Option` when the failure deserves an explanation.",
+      "Use a typed error enum (or `thiserror`) instead of stringly-typed errors.",
+      "`panic!` is reserved for bugs, never for expected failure paths."
+    ],
+    "reason": "Result-typed errors give callers control; panics take it away."
+  },
+  {
+    "id": "react-functional-components",
+    "title": "Functional components only (React)",
+    "category": "code",
+    "tags": ["react", "components"],
+    "description": "No class components in new code.",
+    "defaultPaths": ["**/*.tsx", "**/*.jsx"],
+    "questions": [],
+    "rules": [
+      "All new components are functional components with hooks.",
+      "Class components are migrated opportunistically when the file is touched.",
+      "Do not introduce new `componentDidMount`-style lifecycle patterns."
+    ],
+    "reason": "Hooks reuse logic cleanly; class components couple state to lifecycle methods."
+  },
+  {
+    "id": "react-hooks-rules",
+    "title": "React hooks rules",
+    "category": "code",
+    "tags": ["react", "hooks"],
+    "description": "Hooks at the top level, exhaustive deps.",
+    "defaultPaths": ["**/*.tsx", "**/*.jsx"],
+    "questions": [],
+    "rules": [
+      "Call hooks only at the top level of components and custom hooks — never in conditionals, loops, or nested functions.",
+      "Custom hooks start with `use`.",
+      "`useEffect` dep arrays are exhaustive; never disable `react-hooks/exhaustive-deps` without a comment explaining why."
+    ],
+    "reason": "React tracks hook calls by order; conditional hooks corrupt state across renders."
+  },
+  {
+    "id": "react-memoization",
+    "title": "Memoize only when profiling says so (React)",
+    "category": "code",
+    "tags": ["react", "performance"],
+    "description": "Don't pre-optimize with `memo`/`useMemo`/`useCallback` everywhere.",
+    "defaultPaths": ["**/*.tsx", "**/*.jsx"],
+    "questions": [],
+    "rules": [
+      "Wrap components in `React.memo` only after profiling shows excessive re-renders.",
+      "Use `useMemo` for expensive computations or stable references passed to memoized children — not for every value.",
+      "Use `useCallback` only when the function is a dep of another hook or passed to a memoized child."
+    ],
+    "reason": "Unnecessary memoization adds complexity and overhead with no measurable benefit."
+  },
+  {
+    "id": "nextjs-server-components",
+    "title": "Server components by default (Next.js app router)",
+    "category": "code",
+    "tags": ["nextjs", "react"],
+    "description": "Use server components unless interactivity requires client.",
+    "defaultPaths": ["app/**/*.tsx", "app/**/*.jsx"],
+    "questions": [],
+    "rules": [
+      "Default to server components — no `'use client'` directive unless interactivity or browser APIs are needed.",
+      "Push client boundaries as deep into the tree as possible — keep data-fetching and static rendering on the server.",
+      "Import client-only libraries only inside client components."
+    ],
+    "reason": "Server components ship zero JS for static content — smaller bundles, faster loads."
+  },
+  {
+    "id": "py-type-hints",
+    "title": "Python type hints",
+    "category": "code",
+    "tags": ["python", "types"],
+    "description": "Require type hints on functions.",
+    "defaultPaths": ["**/*.py"],
+    "questions": [
+      {
+        "id": "scope",
+        "prompt": "Which functions require hints?",
+        "type": "choice",
+        "choices": ["all-functions", "public-only", "recommended"],
+        "default": "public-only"
+      }
+    ],
+    "rules": [
+      "Apply type hints to {{scope}}.",
+      "Prefer `from __future__ import annotations` to avoid runtime evaluation of forward refs.",
+      "Use `typing.Protocol` for structural typing, not ABC unless inheritance is required."
+    ],
+    "reason": "Hints catch errors before runtime and serve as inline documentation."
+  },
+  {
+    "id": "py-format-black",
+    "title": "Python formatting with Black",
+    "category": "code",
+    "tags": ["python", "style"],
+    "description": "Defer all formatting to Black.",
+    "defaultPaths": ["**/*.py"],
+    "questions": [],
+    "rules": [
+      "All Python files are formatted by Black on save.",
+      "Do not argue with Black — if it wraps a line oddly, refactor the line."
+    ],
+    "reason": "Consistent formatting removes bikeshedding and shrinks diffs."
+  },
+  {
+    "id": "pytest-fixtures",
+    "title": "pytest fixtures over module globals",
+    "category": "testing",
+    "tags": ["python", "pytest"],
+    "description": "Shared test state lives in fixtures, not module-level globals.",
+    "defaultPaths": ["tests/**/*.py", "**/test_*.py", "**/*_test.py"],
+    "questions": [],
+    "rules": [
+      "Shared test state is provided by pytest fixtures, not module-level globals or setup/teardown classes.",
+      "Fixtures have an explicit `scope` (`function`/`module`/`session`) — choose the smallest scope that works.",
+      "Put shared fixtures in `conftest.py` at the appropriate level."
+    ],
+    "reason": "Fixtures express dependencies explicitly and allow parametrization; globals hide them."
+  },
+  {
+    "id": "pytest-parametrize",
+    "title": "Use `@pytest.mark.parametrize` over loops",
+    "category": "testing",
+    "tags": ["python", "pytest"],
+    "description": "Each test case gets its own report node.",
+    "defaultPaths": ["tests/**/*.py", "**/test_*.py", "**/*_test.py"],
+    "questions": [],
+    "rules": [
+      "Use `@pytest.mark.parametrize` to test multiple inputs — each case reports independently.",
+      "Do not loop over cases inside a single test function — the first failure hides the rest.",
+      "Name the parameters so failures are readable in the report."
+    ],
+    "reason": "A loop-based test shows one failure at a time; parametrize reports every failure in one run."
+  },
+  {
+    "id": "test-coverage-target",
+    "title": "Test coverage target",
+    "category": "testing",
+    "tags": ["testing", "coverage"],
+    "description": "Set a coverage threshold for new and changed code.",
+    "defaultPaths": ["**/*.test.*", "**/*_test.*", "tests/**/*"],
+    "questions": [
+      {
+        "id": "target",
+        "prompt": "Coverage target",
+        "type": "choice",
+        "choices": ["70%", "80%", "90%", "changed-files-only", "critical-paths-only"],
+        "default": "80%"
+      }
+    ],
+    "rules": [
+      "Coverage target for this project: {{target}}.",
+      "Every new function ships with at least one test — happy path + at least one failure case.",
+      "Flakes are bugs: quarantine and fix, never retry-to-green."
+    ],
+    "reason": "Coverage is a floor, not a goal — but without a floor, coverage erodes."
+  },
+  {
+    "id": "test-one-assertion",
+    "title": "One assertion of intent per test",
+    "category": "testing",
+    "tags": ["testing"],
+    "description": "Keep tests focused on a single behaviour.",
+    "defaultPaths": ["**/*.test.*", "**/*_test.*"],
+    "questions": [],
+    "rules": [
+      "Each test asserts one behavioural intent. Many setups is fine; many intents is a smell — split.",
+      "Test names describe the intent, e.g. `it('rejects empty email')`, not `it('test1')`.",
+      "Never mock the thing under test."
+    ],
+    "reason": "Focused tests pinpoint failures. Multi-intent tests hide which behaviour broke."
+  },
+  {
+    "id": "test-naming",
+    "title": "Test naming convention",
+    "category": "testing",
+    "tags": ["testing", "readability"],
+    "description": "Test names state the intent so a failing name alone tells you what broke.",
+    "defaultPaths": ["**/*.test.*", "**/*_test.*", "tests/**/*"],
+    "questions": [
+      {
+        "id": "style",
+        "prompt": "Preferred test naming style",
+        "type": "choice",
+        "choices": ["it-should", "given-when-then", "describe-behaviour"],
+        "default": "it-should"
+      }
+    ],
+    "rules": [
+      "Test names follow the {{style}} style — never generic names like `test_1` or `testFoo`.",
+      "A failing test name alone should tell you what broke without reading the code.",
+      "Use `describe`/`context` blocks (or nested classes in Python) to group related intents."
+    ],
+    "reason": "The test report is a spec of the system's intended behaviour — make it readable."
+  },
+  {
+    "id": "test-pyramid",
+    "title": "Test pyramid ratios",
+    "category": "testing",
+    "tags": ["testing", "strategy"],
+    "description": "Unit tests are the bulk; e2e is the crown.",
+    "defaultPaths": ["tests/**/*", "**/*.test.*", "**/*_test.*"],
+    "questions": [
+      {
+        "id": "balance",
+        "prompt": "Unit / integration / e2e ratio",
+        "type": "choice",
+        "choices": ["70-20-10", "60-30-10", "50-40-10"],
+        "default": "70-20-10"
+      }
+    ],
+    "rules": [
+      "Target a unit / integration / e2e ratio of {{balance}} — unit tests dominate.",
+      "Every pure function has a unit test; every API endpoint has an integration test; critical user paths have one e2e.",
+      "Do not write e2e tests for logic already covered by faster unit tests."
+    ],
+    "reason": "E2e tests are slow and flaky; unit tests are fast and precise. The pyramid balances speed and realism."
+  },
+  {
+    "id": "test-flake-tolerance",
+    "title": "Zero tolerance for flaky tests",
+    "category": "testing",
+    "tags": ["testing", "reliability"],
+    "description": "Flakes are bugs, not retry candidates.",
+    "defaultPaths": ["tests/**/*", "**/*.test.*", "**/*_test.*"],
+    "questions": [],
+    "rules": [
+      "Any test that fails intermittently is quarantined (skip with reason + ticket) — never wrapped in retries.",
+      "Do not add `retry` mechanisms around tests to mask flakiness.",
+      "Root-cause flakes: race conditions, shared state, time dependency, or external-service reliance."
+    ],
+    "reason": "Retrying hides real bugs and trains the team to ignore failing tests."
+  },
+  {
+    "id": "a11y-wcag-level",
+    "title": "Accessibility target",
+    "category": "frontend",
+    "tags": ["accessibility", "ui"],
+    "description": "Set a concrete WCAG compliance level.",
+    "defaultPaths": ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.html"],
+    "questions": [
+      {
+        "id": "level",
+        "prompt": "WCAG target",
+        "type": "choice",
+        "choices": ["2.1-A", "2.1-AA", "2.2-AA", "2.2-AAA"],
+        "default": "2.2-AA"
+      }
+    ],
+    "rules": [
+      "All UI meets WCAG {{level}} — no exceptions without a documented business reason.",
+      "Every interactive element is keyboard-reachable with a visible focus indicator.",
+      "Every image has descriptive `alt` (or `alt=\"\"` if decorative); every form input has a `<label>`.",
+      "Colour contrast meets the level's minimum — do not convey information by colour alone."
+    ],
+    "reason": "Accessibility is a legal and usability requirement, not a nice-to-have."
+  },
+  {
+    "id": "semantic-html",
+    "title": "Semantic HTML over divs",
+    "category": "frontend",
+    "tags": ["accessibility", "html"],
+    "description": "Use elements that describe meaning, not just shape.",
+    "defaultPaths": ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.html"],
+    "questions": [],
+    "rules": [
+      "Use semantic tags: `<button>`, `<nav>`, `<main>`, `<article>`, `<header>`, `<footer>` — not `<div>` for everything.",
+      "Do not build custom click handlers on `<div>` — use `<button>` for actions, `<a>` for navigation.",
+      "Headings (`<h1>`..`<h6>`) are hierarchical; don't skip levels for styling reasons."
+    ],
+    "reason": "Screen readers and browsers give semantic elements built-in keyboard and ARIA behaviour for free."
+  },
+  {
+    "id": "design-tokens-only",
+    "title": "Design tokens only — no raw hex or pixel values",
+    "category": "frontend",
+    "tags": ["design-system", "css"],
+    "description": "Reference tokens; never commit raw colour / spacing values.",
+    "defaultPaths": ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "**/*.css", "**/*.scss"],
+    "questions": [],
+    "rules": [
+      "Never hardcode hex colours or pixel spacing in components — use design tokens / Tailwind theme values.",
+      "If a value is missing from the token set, add it to the design system first, then use it.",
+      "Inline styles are banned for colour/spacing/typography — use classes or CSS variables."
+    ],
+    "reason": "Tokens are the seam between design and code; hardcoded values make theme changes a search-and-replace nightmare."
+  },
+  {
+    "id": "no-secrets-in-code",
+    "title": "No secrets in code or logs",
+    "category": "security",
+    "tags": ["security", "secrets"],
+    "description": "Secrets only in environment / secret managers, never in source or logs.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "No API keys, passwords, tokens, or credentials in source files, commits, or logs.",
+      "Use environment variables or a secret manager. Never commit `.env` files.",
+      "Rotate immediately any secret that leaked to a commit — a revert is not sufficient."
+    ],
+    "reason": "Secrets in git history are permanent even after a revert."
+  },
+  {
+    "id": "parameterized-sql",
+    "title": "Parameterised SQL only",
+    "category": "security",
+    "tags": ["security", "sql"],
+    "description": "Never concatenate user input into SQL.",
+    "defaultPaths": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go"],
+    "questions": [],
+    "rules": [
+      "All SQL queries use parameterised placeholders — never string concatenation or template literals with user input.",
+      "Use the ORM/driver's parameterisation API; do not build the SQL string yourself."
+    ],
+    "reason": "String-built SQL is the textbook SQL injection hole."
+  },
+  {
+    "id": "input-validation",
+    "title": "Validate all user input at the boundary",
+    "category": "security",
+    "tags": ["security", "validation"],
+    "description": "Explicit schema validation for any external input.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "Every HTTP handler, queue consumer, or file parser validates input against an explicit schema before use.",
+      "Reject unknown fields in strict mode rather than silently dropping them.",
+      "Return 400-level errors with a specific field name on validation failure."
+    ],
+    "reason": "Validation at the boundary keeps the internal code model clean and predictable."
+  },
+  {
+    "id": "api-rest-status-codes",
+    "title": "REST status codes",
+    "category": "api",
+    "tags": ["api", "rest"],
+    "description": "Return the status code that matches the outcome.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "200 for successful GET/PUT/PATCH with body; 201 Created for successful POST; 204 No Content when the response has no body.",
+      "400 for client validation errors; 401 for missing/invalid auth; 403 for authenticated-but-forbidden; 404 for missing resource; 409 for conflict.",
+      "500 is a bug — it should never be the documented response for a known error case.",
+      "Every error body includes a stable machine-readable `code` and a human `message`."
+    ],
+    "reason": "Accurate status codes let clients (including your own UI) react without parsing message strings."
+  },
+  {
+    "id": "api-idempotent-mutations",
+    "title": "Idempotent mutations",
+    "category": "api",
+    "tags": ["api", "reliability"],
+    "description": "Retries must be safe.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "Every POST that creates a resource accepts an `Idempotency-Key` header and deduplicates server-side.",
+      "PUT and DELETE are naturally idempotent — don't break this by introducing side effects that depend on current state.",
+      "Store the idempotency key + response for at least 24h; subsequent matching requests return the cached response."
+    ],
+    "reason": "Networks retry; without idempotency you get double-charges, double-emails, and duplicate records."
+  },
+  {
+    "id": "db-money-as-cents",
+    "title": "Store money as integer cents",
+    "category": "database",
+    "tags": ["database", "money"],
+    "description": "Avoid float drift on currency amounts.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "All monetary amounts stored as integer cents (or the minor unit of the currency), never floats.",
+      "Currency code stored alongside every amount — no implicit-currency fields.",
+      "Display formatting happens at the presentation layer only."
+    ],
+    "reason": "IEEE 754 floats accumulate rounding error over additions."
+  },
+  {
+    "id": "db-utc-timestamps",
+    "title": "UTC timestamps everywhere",
+    "category": "database",
+    "tags": ["database", "time"],
+    "description": "Store timestamps in UTC; convert on display.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "All timestamps stored in UTC, ideally as `timestamptz` (Postgres) or equivalent.",
+      "Never store local-time strings without an explicit tz offset.",
+      "Display-layer converts UTC → user timezone; business logic stays in UTC."
+    ],
+    "reason": "Mixing timezones in the database is the #1 cause of off-by-one-day bugs."
+  },
+  {
+    "id": "db-rollback-migrations",
+    "title": "Every migration has a tested rollback",
+    "category": "database",
+    "tags": ["database", "migrations"],
+    "description": "No production migration without a verified rollback path.",
+    "defaultPaths": [],
+    "questions": [],
+    "rules": [
+      "Every migration has a corresponding down/rollback step, tested on staging before production.",
+      "Destructive rollbacks (drops data) must be flagged explicitly in the migration notes.",
+      "Never edit a migration after it has run in any environment — fix with a new migration."
+    ],
+    "reason": "A broken migration without rollback is a guaranteed outage."
+  },
+  {
+    "id": "commit-format",
+    "title": "Commit message format",
+    "category": "process",
+    "tags": ["git", "commits"],
+    "description": "Consistent commit message conventions.",
+    "defaultPaths": [],
+    "questions": [
+      {
+        "id": "style",
+        "prompt": "Commit message style",
+        "type": "choice",
+        "choices": ["conventional", "semantic", "simple-imperative"],
+        "default": "conventional"
+      }
+    ],
+    "rules": [
+      "Commit messages follow the {{style}} style.",
+      "Subject line under 72 chars, imperative mood.",
+      "Body explains the WHY, not the WHAT (the diff shows the what)."
+    ],
+    "reason": "Consistent commit history is searchable and tells a story of the project."
+  },
+  {
+    "id": "pr-size",
+    "title": "PR size guideline",
+    "category": "process",
+    "tags": ["pr", "review"],
+    "description": "Keep pull requests small enough to review.",
+    "defaultPaths": [],
+    "questions": [
+      {
+        "id": "max_lines",
+        "prompt": "PR size soft limit (lines changed)",
+        "type": "choice",
+        "choices": ["200", "400", "600", "1000"],
+        "default": "400"
+      }
+    ],
+    "rules": [
+      "PRs should stay under {{max_lines}} lines changed (additions + deletions).",
+      "Split larger changes into a series — one logical concern per PR.",
+      "Refactor PRs are separate from behavioural-change PRs."
+    ],
+    "reason": "Review quality drops off a cliff above ~400 lines."
+  }
+]

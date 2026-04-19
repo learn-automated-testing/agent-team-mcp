@@ -1,0 +1,56 @@
+{
+  "version": "0.4.0",
+  "installedAt": "2026-04-18T15:21:29.507Z",
+  "updatedAt": "2026-04-19T13:57:11.377Z",
+  "answers": {
+    "primary_user": "AI developers",
+    "domain": "MCP for scaffolding skills, agents, and prompts",
+    "style_guide": "https://google.github.io/styleguide/tsguide.html",
+    "preferred_test": "vitest",
+    "preferred_deploy": "none-yet"
+  },
+  "agents": [
+    "product-owner",
+    "business-analyst",
+    "developer",
+    "qa"
+  ],
+  "skills": [
+    {
+      "name": "prd",
+      "kind": "skill"
+    },
+    {
+      "name": "review",
+      "kind": "skill"
+    },
+    {
+      "name": "debug",
+      "kind": "skill"
+    },
+    {
+      "name": "test",
+      "kind": "skill"
+    },
+    {
+      "name": "scaffold",
+      "kind": "skill"
+    },
+    {
+      "name": "new-app",
+      "kind": "workflow"
+    },
+    {
+      "name": "new-feature",
+      "kind": "workflow"
+    },
+    {
+      "name": "bug-fix",
+      "kind": "workflow"
+    },
+    {
+      "name": "hotfix",
+      "kind": "workflow"
+    }
+  ]
+}

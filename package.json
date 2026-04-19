@@ -1,0 +1,31 @@
+{
+  "name": "skillsrepo-mcp",
+  "version": "0.11.0",
+  "description": "Stdio MCP server that inspects a project and installs an agent-orchestrated team (agents + capability skills + workflows) in Claude Code's official .claude/ layout.",
+  "type": "module",
+  "bin": {
+    "skillsrepo-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "chmod +x dist/index.js",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "yaml": "^2.5.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.1.0"
+  }
+}
