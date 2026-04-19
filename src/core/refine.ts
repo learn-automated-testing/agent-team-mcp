@@ -13,6 +13,8 @@ import type { Answers } from "./types.js";
 
 export type ItemKind = "agent" | "skill" | "workflow";
 
+const NAME_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
 export interface RefineOptions {
   projectDir: string;
   kind: ItemKind;
@@ -42,6 +44,11 @@ async function readTemplate(kind: ItemKind, name: string): Promise<string> {
 
 export async function refineItem(opts: RefineOptions): Promise<RefineReport> {
   const { projectDir, kind, name } = opts;
+  if (!NAME_RE.test(name)) {
+    throw new Error(
+      `refineItem(kind=${kind}, name=${JSON.stringify(name)}): name must be kebab-case`,
+    );
+  }
   const fp = await inspectProject(projectDir);
 
   const savedMeta = await readMetadata(projectDir);

@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
 import { basename, join } from "node:path";
+import { assertPathUnderAllowedRoots, claudeProjectsRoot } from "./path-guard.js";
 
 export interface MeasureOptions {
   projectDir: string;
@@ -180,18 +181,21 @@ export async function measureTeam(opts: MeasureOptions): Promise<MeasureReport> 
     ? (await readdir(agentsDir)).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""))
     : [];
 
+  const allowedRoots = [claudeProjectsRoot(), opts.projectDir];
   let raw = opts.transcript ?? "";
   let source = "(literal)";
   if (opts.transcriptPath) {
-    raw = await readFile(opts.transcriptPath, "utf8");
-    source = opts.transcriptPath;
+    const safe = assertPathUnderAllowedRoots(opts.transcriptPath, allowedRoots, "measureTeam.transcriptPath");
+    raw = await readFile(safe, "utf8");
+    source = safe;
   } else if (opts.transcript && existsSync(opts.transcript) && opts.transcript.length < 4096) {
-    // Heuristic: if it looks like a file path and the file exists, read it
+    // Heuristic: treat as a file path only if it resolves under an allowed root.
     try {
-      raw = await readFile(opts.transcript, "utf8");
-      source = opts.transcript;
+      const safe = assertPathUnderAllowedRoots(opts.transcript, allowedRoots, "measureTeam.transcript");
+      raw = await readFile(safe, "utf8");
+      source = safe;
     } catch {
-      // fall through — treat as literal
+      // Not under an allowed root or unreadable — treat as literal transcript text.
     }
   }
 

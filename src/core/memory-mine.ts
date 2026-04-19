@@ -3,6 +3,7 @@ import { readFile, readdir } from "node:fs/promises";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 import { readMetadataForLessons } from "./lessons.js";
+import { assertPathUnderAllowedRoots, claudeProjectsRoot } from "./path-guard.js";
 import { listRules } from "./rules.js";
 
 export interface MineMemoryInput {
@@ -151,7 +152,13 @@ async function gatherExistingTexts(projectDir: string): Promise<Set<string>> {
 }
 
 export async function mineMemory(input: MineMemoryInput): Promise<MineMemoryResult> {
-  const memDir = input.memoryDir ?? defaultMemoryDir(input.projectDir);
+  const memDir = input.memoryDir
+    ? assertPathUnderAllowedRoots(
+        input.memoryDir,
+        [claudeProjectsRoot(), input.projectDir],
+        "mineMemory.memoryDir",
+      )
+    : defaultMemoryDir(input.projectDir);
   const memoryExists = existsSync(memDir);
   if (!memoryExists) {
     return { memoryDir: memDir, memoryExists: false, candidates: [], total: 0, alreadyCaptured: 0 };
