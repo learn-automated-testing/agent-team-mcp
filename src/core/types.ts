@@ -11,6 +11,7 @@ export interface Fingerprint {
   iacTools: string[];
   hasFrontend: boolean;
   hasDatabase: boolean;
+  mobilePlatforms: string[];
   installedMcps: string[];
   docs: {
     readme: string | null;

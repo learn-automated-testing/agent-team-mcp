@@ -61,7 +61,9 @@ export async function inspectProject(projectDir: string): Promise<Fingerprint> {
   const ciFiles = new Set<string>();
   const deploySignals = new Set<string>();
   const iacSignals = new Set<string>();
+  const mobileSignals = new Set<string>();
   let hasFrontend = false;
+  let hasDartFile = false;
   const existingSkills: string[] = [];
   const existingAgents: string[] = [];
 
@@ -87,6 +89,14 @@ export async function inspectProject(projectDir: string): Promise<Fingerprint> {
     if (name.endsWith(".tf")) iacSignals.add("terraform");
     if (name === "Pulumi.yaml") iacSignals.add("pulumi");
     if (path.includes("/k8s/") || path.includes("/kubernetes/")) deploySignals.add("kubernetes");
+
+    // Mobile platform signals — high-precision only (no bare .swift/.kt,
+    // which also appear in server-side Swift / Spring Boot projects).
+    if (name === "project.pbxproj") mobileSignals.add("ios");
+    if (name === "AndroidManifest.xml") mobileSignals.add("android");
+    if (name === "pubspec.yaml") mobileSignals.add("pubspec");
+    if (ext === ".dart") hasDartFile = true;
+    if (name === "metro.config.js") mobileSignals.add("react-native");
 
     if (path.includes("/.claude/skills/") && name === "SKILL.md") {
       const parts = path.split("/");
@@ -137,6 +147,8 @@ export async function inspectProject(projectDir: string): Promise<Fingerprint> {
     if (deps["mocha"]) testFrameworks.push("mocha");
     if (deps["playwright"] || deps["@playwright/test"]) testFrameworks.push("playwright");
     if (deps["cypress"]) testFrameworks.push("cypress");
+    if (deps["react-native"]) mobileSignals.add("react-native");
+    if (deps["expo"] || deps["expo-router"]) mobileSignals.add("expo");
   }
 
   if (requirementsTxt) {
@@ -158,6 +170,13 @@ export async function inspectProject(projectDir: string): Promise<Fingerprint> {
 
   const primaryLanguage = Object.entries(languages).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
 
+  const mobilePlatforms: string[] = [];
+  if (mobileSignals.has("ios")) mobilePlatforms.push("ios");
+  if (mobileSignals.has("android")) mobilePlatforms.push("android");
+  if (mobileSignals.has("react-native")) mobilePlatforms.push("react-native");
+  if (mobileSignals.has("expo")) mobilePlatforms.push("expo");
+  if (mobileSignals.has("pubspec") && hasDartFile) mobilePlatforms.push("flutter");
+
   const lastCommit = safeGit(["log", "-1", "--format=%cI"], projectDir);
   const shortlog = safeGit(["shortlog", "-sn", "--all", "--no-merges"], projectDir);
   const contributors = shortlog ? shortlog.split("\n").filter(Boolean).length : 0;
@@ -177,6 +196,7 @@ export async function inspectProject(projectDir: string): Promise<Fingerprint> {
     iacTools: [...iacSignals],
     hasFrontend,
     hasDatabase,
+    mobilePlatforms,
     installedMcps,
     docs: { readme, contributing, docsDir },
     existingAgents,
