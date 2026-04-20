@@ -12,7 +12,10 @@ export function registerRefineItem(server: McpServer) {
       inputSchema: {
         projectDir: z.string().describe("Absolute path to the project root"),
         kind: z.enum(["agent", "skill", "workflow"]).describe("Type of item to refine"),
-        name: z.string().describe("Name of the item (e.g. 'developer', 'test', 'new-feature')"),
+        name: z
+          .string()
+          .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "name must be kebab-case (a-z, 0-9, hyphens)")
+          .describe("Name of the item (kebab-case, e.g. 'developer', 'test', 'new-feature')"),
         answers: z
           .union([z.record(z.string()), z.string()])
           .optional()
