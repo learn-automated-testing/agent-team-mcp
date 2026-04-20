@@ -152,20 +152,22 @@ export async function listRules(input: ListRulesInput): Promise<ListRulesResult>
   const result: ListRulesResult = { directory: dir, total: 0, rules: [] };
   if (!existsSync(dir)) return result;
 
-  const entries = await readdir(dir);
-  for (const name of entries) {
-    if (!name.endsWith(".md")) continue;
-    const path = join(dir, name);
-    const body = await readFile(path, "utf8");
-    const paths = parseFrontmatterPaths(body);
+  const mdEntries = (await readdir(dir)).filter((n) => n.endsWith(".md"));
+  const paths = mdEntries.map((name) => join(dir, name));
+  const bodies = await Promise.all(paths.map((p) => readFile(p, "utf8")));
+
+  for (let i = 0; i < mdEntries.length; i++) {
+    const name = mdEntries[i];
+    const path = paths[i];
+    const body = bodies[i];
+    const rulePaths = parseFrontmatterPaths(body);
     const title = parseTitle(body);
 
-    if (input.pathFilter && paths) {
-      const matches = paths.some((p) => globMatches(p, input.pathFilter!));
+    if (input.pathFilter && rulePaths) {
+      const matches = rulePaths.some((p) => globMatches(p, input.pathFilter!));
       if (!matches) continue;
-    } else if (input.pathFilter && !paths) {
-      // unscoped rules apply to all paths, so they always match a filter
     }
+    // Unscoped rules with a pathFilter still match: they apply to all paths.
 
     const bodyWithoutFrontmatter = body.startsWith("---\n")
       ? body.slice(body.indexOf("\n---", 4) + 4).trimStart()
@@ -175,7 +177,7 @@ export async function listRules(input: ListRulesInput): Promise<ListRulesResult>
     result.rules.push({
       name: basename(name, ".md"),
       path,
-      paths,
+      paths: rulePaths,
       title,
       bodyPreview,
     });

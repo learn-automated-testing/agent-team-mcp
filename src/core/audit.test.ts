@@ -65,4 +65,16 @@ describe("auditRules", () => {
     const result = await auditRules(dir);
     expect(result.stale.find((s) => s.name === ruleName)).toBeUndefined();
   });
+
+  it("should evaluate overlapping path globs against a single cached file list", async () => {
+    writeFileSync(join(dir, "a.ts"), "export const a = 1;\n");
+    writeFileSync(join(dir, "b.ts"), "export const b = 1;\n");
+    writeFileSync(join(dir, "c.tsx"), "export const c = 1;\n");
+    await addRule({ projectDir: dir, name: "ts-rule", title: "TS", rules: ["r"], paths: ["**/*.ts"] });
+    await addRule({ projectDir: dir, name: "tsx-rule", title: "TSX", rules: ["r"], paths: ["**/*.tsx"] });
+    await addRule({ projectDir: dir, name: "both-rule", title: "B", rules: ["r"], paths: ["**/*.ts", "**/*.tsx"] });
+    const result = await auditRules(dir);
+    expect(result.stale).toEqual([]);
+    expect(result.scoped).toBe(3);
+  });
 });
