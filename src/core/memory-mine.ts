@@ -172,6 +172,9 @@ export async function mineMemory(input: MineMemoryInput): Promise<MineMemoryResu
   }
 
   const existing = await gatherExistingTexts(input.projectDir);
+  // Precompute the long-text shortlist once — the substring check below
+  // only cares about texts >20 chars, so filter out short entries up front.
+  const longExisting = [...existing].filter((x) => x.length > 20);
   const seen = new Set<string>();
   const candidates: Candidate[] = [];
   let alreadyCaptured = 0;
@@ -183,11 +186,16 @@ export async function mineMemory(input: MineMemoryInput): Promise<MineMemoryResu
       alreadyCaptured++;
       continue;
     }
-    for (const existingText of existing) {
-      if (existingText.length > 20 && (key.includes(existingText) || existingText.includes(key))) {
-        alreadyCaptured++;
-        continue;
+    let isDuplicate = false;
+    for (const existingText of longExisting) {
+      if (key.includes(existingText) || existingText.includes(key)) {
+        isDuplicate = true;
+        break;
       }
+    }
+    if (isDuplicate) {
+      alreadyCaptured++;
+      continue;
     }
     candidates.push(suggestCandidate(e.text, e.category, e.source));
   }
