@@ -47,6 +47,19 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
     skippedAgents.push({ name: "designer", reason: "No frontend framework or JSX components detected." });
   }
 
+  if (fp.mobilePlatforms.length > 0) {
+    agents.push({
+      name: "mobile-developer",
+      reason: `Mobile platform detected: ${fp.mobilePlatforms.join(", ")}.`,
+      confidence: "high",
+    });
+  } else {
+    skippedAgents.push({
+      name: "mobile-developer",
+      reason: "No iOS/Android/React Native/Flutter/Expo signals detected.",
+    });
+  }
+
   const hasDeploySignals = fp.deployTargets.length > 0 || fp.iacTools.length > 0 || fp.ci.length > 0;
   if (hasDeploySignals) {
     agents.push({
@@ -101,6 +114,20 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
     });
   } else {
     skippedSkills.push({ name: "deploy", reason: "No deployment configuration detected." });
+  }
+
+  if (fp.mobilePlatforms.length > 0) {
+    skills.push({
+      name: "mobile-release",
+      kind: "skill",
+      reason: `Mobile platform detected: ${fp.mobilePlatforms.join(", ")}. Store submission has its own workflow.`,
+      confidence: "high",
+    });
+  } else {
+    skippedSkills.push({
+      name: "mobile-release",
+      reason: "No mobile platform detected — install when adding an iOS/Android/RN/Flutter client.",
+    });
   }
 
   // Workflows
