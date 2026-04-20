@@ -88,6 +88,8 @@ export async function inspectProject(projectDir: string): Promise<Fingerprint> {
     if (name === "fly.toml") deploySignals.add("fly");
     if (name.endsWith(".tf")) iacSignals.add("terraform");
     if (name === "Pulumi.yaml") iacSignals.add("pulumi");
+    if (ext === ".bicep") iacSignals.add("bicep");
+    if (name === "cdk.json") iacSignals.add("cdk");
     if (path.includes("/k8s/") || path.includes("/kubernetes/")) deploySignals.add("kubernetes");
 
     // Mobile platform signals — high-precision only (no bare .swift/.kt,

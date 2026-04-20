@@ -116,6 +116,20 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
     skippedSkills.push({ name: "deploy", reason: "No deployment configuration detected." });
   }
 
+  if (fp.iacTools.length > 0) {
+    skills.push({
+      name: "iac",
+      kind: "skill",
+      reason: `IaC tooling detected: ${fp.iacTools.join(", ")}. Provisioning has its own plan/apply discipline.`,
+      confidence: "high",
+    });
+  } else {
+    skippedSkills.push({
+      name: "iac",
+      reason: "No infrastructure-as-code files detected (.tf, Pulumi.yaml, .bicep, cdk.json).",
+    });
+  }
+
   if (fp.mobilePlatforms.length > 0) {
     skills.push({
       name: "mobile-release",

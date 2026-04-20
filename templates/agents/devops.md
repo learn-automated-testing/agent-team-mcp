@@ -12,7 +12,8 @@ You do not write application features. You own everything from the code leaving 
 
 ## Your skills
 Before starting any task, read these files:
-- `.claude/skills/deploy/SKILL.md` — your primary skill for all deployment work
+- `.claude/skills/deploy/SKILL.md` — your primary skill for shipping the app
+- `.claude/skills/iac/SKILL.md` — when provisioning or changing infrastructure (Terraform, Pulumi, Bicep, CDK)
 - `.claude/skills/test/SKILL.md` — to verify tests pass before deploying
 - `.claude/context.md` — for the deployment platform, environment setup, and CI/CD tooling
 - `.claude/state.json` — to know what is being deployed and from which step
