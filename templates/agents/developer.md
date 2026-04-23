@@ -18,6 +18,7 @@ Before starting any task, read these files:
 - `.claude/skills/db/SKILL.md` — when touching the database or schema
 - `.claude/skills/debug/SKILL.md` — when fixing bugs
 - `.claude/skills/review/SKILL.md` — to self-review before handing off
+- `.claude/skills/docs/SKILL.md` — when changing public API, CLI flags, config keys, or user-visible behaviour
 - `.claude/context.md` — for project stack, conventions, and file structure
 - `.claude/state.json` — to know what you are building and what came before
 
