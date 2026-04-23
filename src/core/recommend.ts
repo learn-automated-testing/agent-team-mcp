@@ -30,6 +30,11 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
       : "No test framework detected, but every project needs a QA discipline.",
     confidence: fp.testFrameworks.length > 0 ? "high" : "medium",
   });
+  agents.push({
+    name: "technical-writer",
+    reason: "Every project benefits from a dedicated docs perspective — README, ADRs, changelog, release notes. Invoked for coherent docs passes rather than inline edits.",
+    confidence: "medium",
+  });
 
   if (fp.hasFrontend) {
     agents.push({
@@ -78,6 +83,7 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
   skills.push({ name: "prd", kind: "skill", reason: "Universal — every feature starts from a spec.", confidence: "high" });
   skills.push({ name: "review", kind: "skill", reason: "Universal — every change benefits from structured review.", confidence: "high" });
   skills.push({ name: "debug", kind: "skill", reason: "Universal — every codebase has bugs.", confidence: "high" });
+  skills.push({ name: "docs", kind: "skill", reason: "Universal — public API / config / behaviour changes need matching doc updates; ADRs, changelog, release notes.", confidence: "high" });
   skills.push({
     name: "test",
     kind: "skill",
