@@ -35,6 +35,16 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
     reason: "Every project benefits from a dedicated docs perspective — README, ADRs, changelog, release notes. Invoked for coherent docs passes rather than inline edits.",
     confidence: "medium",
   });
+  agents.push({
+    name: "monitoring",
+    reason: "Every project that runs in production needs a dedicated observability perspective — SLOs, dashboards, alert hygiene, incident triage.",
+    confidence: "medium",
+  });
+  agents.push({
+    name: "architect",
+    reason: "Every project benefits from explicit system-design ownership — ADRs, technology choice, module boundaries, NFRs — before code is written.",
+    confidence: "medium",
+  });
 
   if (fp.hasFrontend) {
     agents.push({
@@ -43,13 +53,13 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
       confidence: "high",
     });
     agents.push({
-      name: "designer",
+      name: "ui-designer",
       reason: "Frontend detected — dedicated UI/design system work is valuable.",
       confidence: "high",
     });
   } else {
     skippedAgents.push({ name: "ux-designer", reason: "No frontend framework or JSX components detected." });
-    skippedAgents.push({ name: "designer", reason: "No frontend framework or JSX components detected." });
+    skippedAgents.push({ name: "ui-designer", reason: "No frontend framework or JSX components detected." });
   }
 
   if (fp.mobilePlatforms.length > 0) {
@@ -84,6 +94,7 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
   skills.push({ name: "review", kind: "skill", reason: "Universal — every change benefits from structured review.", confidence: "high" });
   skills.push({ name: "debug", kind: "skill", reason: "Universal — every codebase has bugs.", confidence: "high" });
   skills.push({ name: "docs", kind: "skill", reason: "Universal — public API / config / behaviour changes need matching doc updates; ADRs, changelog, release notes.", confidence: "high" });
+  skills.push({ name: "monitoring", kind: "skill", reason: "Universal — every shipped feature needs SLOs, signals, and runbook-backed alerts before it serves real users.", confidence: "medium" });
   skills.push({
     name: "test",
     kind: "skill",

@@ -1,10 +1,10 @@
 {
-  "name": "skillsrepo-mcp",
-  "version": "0.11.0",
-  "description": "Stdio MCP server that inspects a project and installs an agent-orchestrated team (agents + capability skills + workflows) in Claude Code's official .claude/ layout.",
+  "name": "agent-team-mcp",
+  "version": "0.12.0",
+  "description": "Stdio MCP server that inspects a project and installs an agent-orchestrated team (agents + capability skills + workflows) for AI coding assistants. Today targets Claude Code's `.claude/` layout; designed so additional hosts (Copilot, Gemini) can be added as emit targets.",
   "type": "module",
   "bin": {
-    "skillsrepo-mcp": "dist/index.js"
+    "agent-team-mcp": "dist/index.js"
   },
   "files": [
     "dist",

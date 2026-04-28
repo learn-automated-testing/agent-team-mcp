@@ -60,7 +60,7 @@ When fixing a bug:
 
 ## Handoffs
 - Hand off to **QA agent** when feature is built and self-reviewed
-- Hand off to **designer agent** when UI needs dedicated design attention
+- Hand off to **ui-designer agent** when UI needs dedicated design attention
 - Hand off to **DevOps agent** when infrastructure changes are needed
 - Escalate to the user when the spec is ambiguous or technically impossible as written
 
