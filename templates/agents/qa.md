@@ -31,7 +31,7 @@ Before starting any task, read these files:
 
 When receiving a feature to test:
 1. Read `.claude/state.json` — confirm `current_step` is `test`
-2. Read the PRD: `docs/prd-{feature-name}.md` — extract acceptance criteria
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md` — extract acceptance criteria
 3. Read `.claude/context.md` for the test framework and conventions
 4. Load `.claude/skills/test/SKILL.md`
 

@@ -8,7 +8,7 @@ export function registerInstallSetup(server: McpServer) {
     {
       title: "Install an agent-and-skill team",
       description:
-        "Inspects the project, picks a team of agents + capability skills + workflows, and writes them into .claude/agents/, .claude/skills/, plus .claude/context.md, .claude/state.json, and .claude/.skillsrepo.json. Each agent/skill gets a 'Detected stack' section injected after its frontmatter. Skips existing files unless overwrite=true. Pass answers from the open_questions returned by recommend_setup.",
+        "Inspects the project, picks a team of agents + capability skills + workflows, and writes them into the chosen tooling tree. The 'target_tooling' answer (claude | copilot | both, default both) controls layout: 'claude' writes only .claude/ + CLAUDE.md, 'copilot' writes only .github/ (instructions, agents, skills, context), 'both' writes the .claude/ tree plus a Copilot bridge under .github/copilot-instructions.md and .github/instructions/. MCP-internal state (.claude/state.json, .claude/.skillsrepo.json) is always written. Each agent/skill gets a 'Detected stack' section injected after its frontmatter. Skips existing files unless overwrite=true. Pass answers from the open_questions returned by recommend_setup.",
       inputSchema: {
         projectDir: z.string().describe("Absolute path to the project to analyze and install into"),
         outDir: z.string().optional().describe("Where to write; defaults to projectDir"),

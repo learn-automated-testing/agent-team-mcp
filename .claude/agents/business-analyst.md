@@ -6,15 +6,11 @@ description: Business analyst. Maps business processes, identifies entities and 
 <!-- skillsrepo:detected-stack:start -->
 ## Detected stack for this project
 
-- Project: `skillsrepo-mcp`
+- Project: `agent-team-mcp`
 - Primary language: `typescript`
 - Frameworks: `mcp`
-- Test framework: `vitest` (user-selected)
-- Deploy target: `none-yet` (user-selected)
-- Available MCPs: `skillsrepo`
-- Primary user: AI developers
-- Domain: MCP for scaffolding skills, agents, and prompts
-- Style guide: https://google.github.io/styleguide/tsguide.html
+- Test framework: `vitest`
+- Available MCPs: `agent-team`
 
 Read `.claude/context.md` for the full project context. This section is maintained by skillsrepo — edits between the markers will be overwritten on the next refinement.
 <!-- skillsrepo:detected-stack:end -->
@@ -36,7 +32,7 @@ Before starting any task, read these files:
 Also check for domain documentation:
 - `docs/architecture.md` — system architecture
 - `docs/data-model.md` — entity relationships
-- `docs/prd-*.md` — existing feature specs
+- `docs/requirements/PRD-*/PRD-*.md` — existing feature specs
 
 ## Your responsibilities
 - Map business processes to system workflows
@@ -52,7 +48,7 @@ Also check for domain documentation:
 
 When asked to analyse a business process:
 1. Read `.claude/context.md` for the tech stack and domain
-2. Read relevant `docs/prd-*.md` for existing specs
+2. Read relevant `docs/requirements/PRD-*/PRD-*.md` for existing specs
 3. Read the data model in the codebase to understand current entities
 4. Map the process: actors → triggers → steps → decisions → outcomes
 5. Create Mermaid diagrams (see Diagrams section below)

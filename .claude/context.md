@@ -1,4 +1,4 @@
-# Project context: skillsrepo-mcp
+# Project context: agent-team-mcp
 
 This file is read by every agent and skill before they act. It is the single source of
 truth for project-specific stack, conventions, and domain knowledge. Keep it current.
@@ -10,16 +10,16 @@ truth for project-specific stack, conventions, and domain knowledge. Keep it cur
 - **Frameworks:** mcp
 - **Test frameworks:** vitest
 - **CI/CD:** (none detected)
-- **Deploy targets:** none-yet
+- **Deploy targets:** (none detected)
 - **IaC tools:** (none detected)
 - **Has frontend:** false
 
 ## Documentation locations
 
-- **README:** (none)
+- **README:** README.md
 - **Contributing guide:** CONTRIBUTING.md
 - **Docs directory:** docs
-- **PRDs:** `docs/prd-*.md`
+- **PRDs:** `docs/requirements/PRD-*/PRD-*.md`
 - **Runbook:** `docs/runbook.md`
 - **Data model:** `docs/data-model.md`
 - **Design system:** `docs/design-system.md`
@@ -36,9 +36,9 @@ Fill in the project's conventions here. Examples:
 
 ## Domain
 
-- **Primary users:** AI developers
-- **Domain:** MCP for scaffolding skills, agents, and prompts
-- **Style guide:** https://google.github.io/styleguide/tsguide.html
+- **Primary users:** (not yet specified — ask the user)
+- **Domain:** (not yet specified — ask the user)
+- **Style guide:** (not specified)
 
 Fill in the rest as the project crystallises:
 

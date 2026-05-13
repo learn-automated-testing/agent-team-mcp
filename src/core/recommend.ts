@@ -1,4 +1,7 @@
+import { recommendRules } from "./recommend-rules.js";
 import type { Fingerprint, OpenQuestion, PlannedAgent, PlannedSkill, SetupPlan } from "./types.js";
+
+export { recommendRules } from "./recommend-rules.js";
 
 export function recommendSetup(fp: Fingerprint): SetupPlan {
   const agents: PlannedAgent[] = [];
@@ -90,7 +93,9 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
   }
 
   // Skills
-  skills.push({ name: "prd", kind: "skill", reason: "Universal — every feature starts from a spec.", confidence: "high" });
+  skills.push({ name: "prd", kind: "skill", reason: "Universal — every feature starts from a PRD (top of the spec hierarchy).", confidence: "high" });
+  skills.push({ name: "epic", kind: "skill", reason: "Universal — decomposes a confirmed PRD into coherent slices of work.", confidence: "high" });
+  skills.push({ name: "user-story", kind: "skill", reason: "Universal — turns each epic into buildable stories with explicit acceptance criteria.", confidence: "high" });
   skills.push({ name: "review", kind: "skill", reason: "Universal — every change benefits from structured review.", confidence: "high" });
   skills.push({ name: "debug", kind: "skill", reason: "Universal — every codebase has bugs.", confidence: "high" });
   skills.push({ name: "docs", kind: "skill", reason: "Universal — public API / config / behaviour changes need matching doc updates; ADRs, changelog, release notes.", confidence: "high" });
@@ -169,6 +174,14 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
 
   // Open questions — minimal, only what the fingerprint can't tell us
   openQuestions.push({
+    id: "target_tooling",
+    prompt:
+      "Which AI coding tool(s) should this setup target? 'both' writes the .claude/ tree plus a Copilot bridge under .github/. 'claude' writes only .claude/. 'copilot' writes only .github/.",
+    optional: true,
+    choices: ["both", "claude", "copilot"],
+    default: "both",
+  });
+  openQuestions.push({
     id: "primary_user",
     prompt: "Who are the primary users of this project?",
     optional: false,
@@ -200,12 +213,16 @@ export function recommendSetup(fp: Fingerprint): SetupPlan {
     });
   }
 
+  const rules = recommendRules(fp);
+
   return {
     projectName: fp.projectName,
     agents,
     skills,
+    rules,
     skippedAgents,
     skippedSkills,
+    skippedRules: [],
     openQuestions,
   };
 }

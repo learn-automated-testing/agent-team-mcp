@@ -7,15 +7,11 @@ isolation: worktree
 <!-- skillsrepo:detected-stack:start -->
 ## Detected stack for this project
 
-- Project: `skillsrepo-mcp`
+- Project: `agent-team-mcp`
 - Primary language: `typescript`
 - Frameworks: `mcp`
-- Test framework: `vitest` (user-selected)
-- Deploy target: `none-yet` (user-selected)
-- Available MCPs: `skillsrepo`
-- Primary user: AI developers
-- Domain: MCP for scaffolding skills, agents, and prompts
-- Style guide: https://google.github.io/styleguide/tsguide.html
+- Test framework: `vitest`
+- Available MCPs: `agent-team`
 
 Read `.claude/context.md` for the full project context. This section is maintained by skillsrepo — edits between the markers will be overwritten on the next refinement.
 <!-- skillsrepo:detected-stack:end -->
@@ -47,7 +43,7 @@ Before starting any task, read these files:
 
 When receiving a feature to test:
 1. Read `.claude/state.json` — confirm `current_step` is `test`
-2. Read the PRD: `docs/prd-{feature-name}.md` — extract acceptance criteria
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md` — extract acceptance criteria
 3. Read `.claude/context.md` for the test framework and conventions
 4. Load `.claude/skills/test/SKILL.md`
 

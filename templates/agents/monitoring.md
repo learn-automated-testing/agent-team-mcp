@@ -34,7 +34,7 @@ Before starting any task, read these files:
 
 ### When instrumenting a new feature (pre-deploy):
 1. Read `.claude/state.json` — confirm current_step is `monitoring` or that you are reviewing a build
-2. Read the PRD: `docs/prd-{feature-name}.md` — note acceptance criteria you can measure
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md` — note acceptance criteria you can measure
 3. Load `.claude/skills/monitoring/SKILL.md`
 4. Identify the critical user journey for the feature — the path that must work
 5. Add structured logs, metrics, and traces along that path:

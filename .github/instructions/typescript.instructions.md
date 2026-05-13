@@ -1,0 +1,41 @@
+---
+applyTo: "**/*.ts,**/*.tsx"
+---
+
+# TypeScript rules
+
+## Strict typing
+
+- Do not use `any` — use `unknown` and narrow at the boundary.
+- All exported functions have explicit return types.
+- Prefer `interface` over `type` for object shapes.
+- Use `readonly` on immutable fields.
+
+**Why:** `any` disables the type system. Explicit return types make refactors safe.
+
+## Async error handling
+
+- Every `await` that can reject must be in a `try/catch` **or** returned from a function that documents it throws.
+- Error messages must include the operation name and relevant parameters (e.g. `loadUser(${userId}) failed: …`).
+- Never silently swallow errors with empty catch blocks.
+
+**Why:** Unhandled rejections crash the process. Silent catches mask production incidents.
+
+## File length (applies to `src/**`)
+
+- Source files must not exceed 300 lines.
+- Long files almost always indicate multiple responsibilities — split before you hit the limit.
+
+**Why:** A line budget keeps files focused and easier to review.
+
+## Input validation at the boundary
+
+- Every HTTP handler, queue consumer, or file parser validates input against an explicit schema before use.
+- Reject unknown fields in strict mode rather than silently dropping them.
+- Return 400-level errors with a specific field name on validation failure.
+
+**Why:** Validation at the boundary keeps the internal code model clean and predictable.
+
+## Style
+
+(not specified)

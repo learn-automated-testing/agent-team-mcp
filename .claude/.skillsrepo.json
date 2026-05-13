@@ -1,7 +1,7 @@
 {
   "version": "0.4.0",
   "installedAt": "2026-04-18T15:21:29.507Z",
-  "updatedAt": "2026-04-19T13:57:11.377Z",
+  "updatedAt": "2026-05-13T06:47:42.149Z",
   "answers": {
     "primary_user": "AI developers",
     "domain": "MCP for scaffolding skills, agents, and prompts",
@@ -13,11 +13,22 @@
     "product-owner",
     "business-analyst",
     "developer",
-    "qa"
+    "qa",
+    "technical-writer",
+    "monitoring",
+    "architect"
   ],
   "skills": [
     {
       "name": "prd",
+      "kind": "skill"
+    },
+    {
+      "name": "epic",
+      "kind": "skill"
+    },
+    {
+      "name": "user-story",
       "kind": "skill"
     },
     {
@@ -26,6 +37,14 @@
     },
     {
       "name": "debug",
+      "kind": "skill"
+    },
+    {
+      "name": "docs",
+      "kind": "skill"
+    },
+    {
+      "name": "monitoring",
       "kind": "skill"
     },
     {

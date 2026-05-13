@@ -35,7 +35,7 @@ Before starting any task, read these files:
 
 When receiving a mobile feature to build:
 1. Read `.claude/state.json` — confirm `current_step` is `build`
-2. Read the PRD: `docs/prd-{feature-name}.md`
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md`
 3. Read `.claude/context.md` for stack and conventions — note which platforms are in scope
 4. Load the relevant skill files
 5. Plan per-platform if the codebase is native-native (separate iOS/Android) — one plan per target

@@ -41,6 +41,12 @@ export interface PlannedSkill {
   confidence: Confidence;
 }
 
+export interface PlannedRule {
+  id: string;
+  reason: string;
+  confidence: Confidence;
+}
+
 export interface OpenQuestion {
   id: string;
   prompt: string;
@@ -53,12 +59,16 @@ export interface SetupPlan {
   projectName: string;
   agents: PlannedAgent[];
   skills: PlannedSkill[];
+  rules: PlannedRule[];
   skippedAgents: Array<{ name: string; reason: string }>;
   skippedSkills: Array<{ name: string; reason: string }>;
+  skippedRules: Array<{ id: string; reason: string }>;
   openQuestions: OpenQuestion[];
 }
 
 export type Answers = Record<string, string>;
+
+export type TargetTooling = "claude" | "copilot" | "both";
 
 export type LessonCategory = "code" | "process" | "tooling" | "domain";
 

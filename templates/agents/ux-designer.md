@@ -19,7 +19,7 @@ Before starting any task, read these files:
 
 Also check:
 - `docs/process-*.md` — business process flows (your source of truth for user journeys)
-- `docs/prd-*.md` — feature requirements and acceptance criteria
+- `docs/requirements/PRD-*/PRD-*.md` — feature requirements and acceptance criteria
 - The existing app routes for the current navigation and page structure
 
 ## Your responsibilities

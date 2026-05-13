@@ -1,0 +1,55 @@
+# GitHub Copilot instructions — {{projectName}}
+
+This repo uses GitHub Copilot with a customization layer under `.github/`. Skills, agent personas, and path-scoped rules all live here.
+
+## How customization is organized
+
+| Concern | Location |
+| --- | --- |
+| Repo-wide rules (this file) | `.github/copilot-instructions.md` |
+| Path-scoped rules | `.github/instructions/*.instructions.md` |
+| Procedural skills / workflows | `.github/skills/<name>/SKILL.md` |
+| Sub-agent personas | `.github/agents/<name>.agent.md` |
+| Project context (stack, domain) | `.github/context.md` |
+
+## Stack
+
+- **Language:** {{primaryLanguage}}
+- **Frameworks:** {{frameworks}}
+- **Test framework:** {{testFrameworks}}
+- **Deploy target:** {{deployTargets}}
+- **Domain:** {{domain}} (primary user: {{primaryUser}})
+- **Style guide:** {{styleGuide}}
+
+Full project context lives in `.github/context.md`. Read it before non-trivial work.
+
+## Core conventions
+
+- Check `.github/instructions/*.instructions.md` for path-scoped rules before editing source files.
+- Read the relevant skill (`.github/skills/<name>/SKILL.md`) before using its capability.
+- When a task matches an agent persona under `.github/agents/`, follow that persona's system prompt.
+- Never commit secrets, `.env` files, or API keys.
+- Never deploy with failing tests or an unclean git state.
+
+## Workflow state
+
+Workflow state lives at **`.claude/state.json`** — yes, under `.claude/`, not `.github/`. This is an MCP convention; the file is shared across Claude Code, Copilot, and any other engine driving the same repo. Update it the same way you edit any other source file: read it with your workspace tools, modify the JSON, write it back. There is no special MCP call. Install metadata at `.claude/.skillsrepo.json` is read-only from your side — the installer owns it.
+
+## Repo-wide guardrails
+
+- **Commit format:** Conventional Commits (`feat`, `fix`, `chore`, `docs`, `refactor`). Subject ≤72 chars, imperative mood. Body explains the **why**, not the **what**.
+- **PR size:** Stay under 400 lines changed. Split larger changes into a series — one logical concern per PR. Refactor PRs are separate from behavioral-change PRs.
+- **No secrets in code or logs.** Use environment variables or a secret manager. A leaked secret must be **rotated** — a revert is not sufficient.
+- **Validate input at the boundary.** Every HTTP handler, queue consumer, or file parser validates input against an explicit schema before use. Reject unknown fields. Return 400-level errors with a specific field name on validation failure.
+
+## Installed sub-agents
+
+Available under `.github/agents/`:
+
+{{agentsList}}
+
+## Skills & workflows
+
+Available under `.github/skills/` — read the relevant `SKILL.md` before using:
+
+{{skillsList}}

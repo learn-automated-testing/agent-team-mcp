@@ -20,22 +20,40 @@ Create `.claude/state.json` in the new project as the first action.
 ### Step 1 — PRD
 **Skill:** `.claude/skills/prd/SKILL.md`
 **Input:** App idea from user
-**Output:** `docs/prd-v1.md` — full product requirements document
-**Gate:** User confirms: goal, users, must-have features, and out-of-scope are all correct
-**State update:** `{ "current_step": "data-model", "completed": ["prd"] }`
+**Output:** `docs/requirements/PRD-001-v1/PRD-001-v1.md` — vision, capabilities (one-liners), success metrics. **No detailed user stories or ACs at this level.**
+**Gate:** User confirms: goal, users, capabilities, and out-of-scope are all correct
+**State update:** `{ "current_step": "epic", "completed": ["prd"] }`
 
 Take extra time here. A bad PRD means building the wrong thing.
 Ask clarifying questions until the following are crystal clear:
 - Who is this for and what problem does it solve?
-- What are the 3-5 must-have features for v1?
+- What are the 3-5 must-have capabilities for v1?
 - What is explicitly out of scope?
 - What does the tech stack look like?
 
 ---
 
+### Step 1a — Epic decomposition
+**Skill:** `.claude/skills/epic/SKILL.md`
+**Input:** Confirmed PRD from step 1
+**Output:** One or more `docs/requirements/PRD-001-v1/EPIC-NNN-<slug>/EPIC-NNN-<slug>.md` — coherent slices of v1, each with scope + testing-scope decision
+**Gate:** User has confirmed the slice boundaries. Testing-scope answered for every epic before stories are written.
+**State update:** `{ "current_step": "user-story", "completed": ["prd", "epic"] }`
+
+---
+
+### Step 1b — User stories
+**Skill:** `.claude/skills/user-story/SKILL.md`
+**Input:** Confirmed epic(s) from step 1a
+**Output:** `docs/requirements/PRD-001-v1/EPIC-NNN-<slug>/US-NNN-<slug>.md` — one per buildable unit, with acceptance criteria + chosen test frameworks
+**Gate:** Every must-have story for v1 has `status: ready` and confirmed ACs.
+**State update:** `{ "current_step": "data-model", "completed": ["prd", "epic", "user-story"] }`
+
+---
+
 ### Step 2 — Data model design
 **Skill:** `.claude/skills/db/SKILL.md`
-**Input:** PRD from step 1
+**Input:** Confirmed user stories from step 1b
 **Output:** `docs/data-model.md` — complete schema design (no migrations yet, just design)
 **Gate:** User reviews and confirms the data model before any code is written
 **State update:** `{ "current_step": "scaffold", "completed": ["prd", "data-model"] }`

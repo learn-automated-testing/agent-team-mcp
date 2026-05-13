@@ -47,6 +47,34 @@ export async function readSkillTemplate(name: string): Promise<string> {
   return expandSnippets(raw);
 }
 
+export async function listSkillReferenceFiles(name: string): Promise<string[]> {
+  const dir = join(TEMPLATES_DIR, "skills", name, "references");
+  try {
+    const entries = await readdir(dir, { withFileTypes: true });
+    return entries.filter((e) => e.isFile()).map((e) => e.name).sort();
+  } catch {
+    return [];
+  }
+}
+
+export async function readSkillReferenceFile(name: string, file: string): Promise<string> {
+  return await readFile(join(TEMPLATES_DIR, "skills", name, "references", file), "utf8");
+}
+
+export async function listRequirementsTemplates(): Promise<string[]> {
+  const dir = join(TEMPLATES_DIR, "requirements");
+  try {
+    const entries = await readdir(dir, { withFileTypes: true });
+    return entries.filter((e) => e.isFile() && e.name.endsWith(".md")).map((e) => e.name).sort();
+  } catch {
+    return [];
+  }
+}
+
+export async function readRequirementsTemplate(file: string): Promise<string> {
+  return await readFile(join(TEMPLATES_DIR, "requirements", file), "utf8");
+}
+
 export async function readWorkflowTemplate(name: string): Promise<string> {
   const raw = await readFile(join(TEMPLATES_DIR, "workflows", name, "SKILL.md"), "utf8");
   return expandSnippets(raw);
@@ -54,4 +82,22 @@ export async function readWorkflowTemplate(name: string): Promise<string> {
 
 export async function readContextTemplate(): Promise<string> {
   return await readFile(join(TEMPLATES_DIR, "context.md.tmpl"), "utf8");
+}
+
+export async function readCopilotInstructionsTemplate(standalone: boolean): Promise<string> {
+  const file = standalone ? "copilot-instructions-standalone.md.tmpl" : "copilot-instructions.md.tmpl";
+  return await readFile(join(TEMPLATES_DIR, file), "utf8");
+}
+
+export async function listInstructionTemplates(): Promise<string[]> {
+  const dir = join(TEMPLATES_DIR, "instructions");
+  const entries = await readdir(dir);
+  return entries
+    .filter((f) => f.endsWith(".instructions.md.tmpl"))
+    .map((f) => f.replace(/\.instructions\.md\.tmpl$/, ""))
+    .sort();
+}
+
+export async function readInstructionTemplate(name: string): Promise<string> {
+  return await readFile(join(TEMPLATES_DIR, "instructions", `${name}.instructions.md.tmpl`), "utf8");
 }

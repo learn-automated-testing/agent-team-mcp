@@ -47,6 +47,8 @@ Available sub-agents (see `.claude/agents/`):
 Available skills & workflows (see `.claude/skills/`):
 {{skillsList}}
 
+**Spec hierarchy:** PRD → Epic → User Story. The `prd` skill produces capabilities (one-liners) at `docs/requirements/PRD-NNN-<slug>/PRD-NNN-<slug>.md`; the `epic` skill carves epics under that PRD's folder; the `user-story` skill writes individual stories with acceptance criteria. Never hand a PRD straight to a developer — always decompose through the epic and user-story skills first.
+
 Run `/agents` in Claude Code to browse sub-agents with their descriptions.
 
 ## Style guide

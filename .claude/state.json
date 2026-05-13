@@ -1,12 +1,12 @@
 {
-  "project": "skillsrepo-mcp",
-  "status": "idle",
-  "current_step": null,
+  "project": "agent-team-mcp",
+  "status": "done",
+  "current_step": "build",
   "workflow": null,
-  "feature": null,
-  "completed": [],
+  "feature": "EPIC-015 US-001 fingerprint-driven-rule-pack",
+  "completed": ["EPIC-015 US-001"],
   "skipped": [],
   "started_at": null,
-  "updated_at": "2026-04-19T13:57:11.376Z",
-  "notes": []
+  "updated_at": "2026-05-13T08:48:00.000Z",
+  "notes": ["US-001 built and self-reviewed; 12 new tests; live invocations match expected rule counts (9 py / 11 ts)."]
 }

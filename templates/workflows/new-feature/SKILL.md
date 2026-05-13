@@ -37,15 +37,33 @@ Skip this step if the feature has no UI (API-only, infra, backend logic). Note t
 ### Step 2 — PRD
 **Skill:** `.claude/skills/prd/SKILL.md`
 **Input:** UX spec from step 1 + feature idea from user
-**Output:** `docs/prd-{feature-name}.md` committed to repo
-**Gate:** User has reviewed and confirmed the PRD before proceeding
-**State update:** `{ "current_step": "db", "completed": ["ux", "prd"] }`
+**Output:** `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md` — vision, capabilities (one-liners), success metrics. **No detailed user stories or ACs at this level.**
+**Gate:** User has reviewed and confirmed the PRD's capabilities and success metrics
+**State update:** `{ "current_step": "epic", "completed": ["ux", "prd"] }`
+
+---
+
+### Step 2a — Epic decomposition
+**Skill:** `.claude/skills/epic/SKILL.md`
+**Input:** Confirmed PRD from step 2
+**Output:** One or more `docs/requirements/PRD-{feature-name}/EPIC-NNN-<slug>/EPIC-NNN-<slug>.md` — coherent slices of work, each with scope + testing-scope decision
+**Gate:** User has confirmed the slice boundaries. Testing-scope answered for every epic before stories are written.
+**State update:** `{ "current_step": "user-story", "completed": ["ux", "prd", "epic"] }`
+
+---
+
+### Step 2b — User stories
+**Skill:** `.claude/skills/user-story/SKILL.md`
+**Input:** Confirmed epic(s) from step 2a
+**Output:** `docs/requirements/PRD-{feature-name}/EPIC-NNN-<slug>/US-NNN-<slug>.md` — one per buildable unit, with explicit acceptance criteria + chosen test frameworks
+**Gate:** Every must-have story has `status: ready` and confirmed ACs. The developer agent does not pick up `draft` stories.
+**State update:** `{ "current_step": "db", "completed": ["ux", "prd", "epic", "user-story"] }`
 
 ---
 
 ### Step 3 — DB migration
 **Skill:** `.claude/skills/db/SKILL.md`
-**Input:** PRD from step 2
+**Input:** Confirmed user stories from step 2b (ready stories drive schema needs)
 **Output:**
   - Migration file created and run on local/dev
   - `docs/data-model.md` updated
@@ -59,7 +77,7 @@ Skip this step if the feature requires no schema changes. Note the skip in state
 
 ### Step 4 — Build
 **Skills:** `.claude/skills/design/SKILL.md` + `.claude/skills/scaffold/SKILL.md` (if new files needed)
-**Input:** UX spec + PRD + updated data model
+**Input:** UX spec + the next ready user story (`status: ready`) + updated data model
 **Output:** Feature implemented — components, API routes, business logic committed
 **Gate:** App runs locally without errors. No console errors or warnings.
 **State update:** `{ "current_step": "review", "completed": ["ux", "prd", "db", "build"] }`

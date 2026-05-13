@@ -35,7 +35,7 @@ Before starting any task, read these files:
 
 When receiving a feature to build:
 1. Read `.claude/state.json` — confirm `current_step` is `build`
-2. Read the PRD: `docs/prd-{feature-name}.md`
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md`
 3. Read `.claude/context.md` for stack and conventions
 4. Load the relevant skill files for this feature
 5. Plan before coding — list the files you will create or modify
@@ -70,7 +70,7 @@ When fixing a bug:
 - Never build a feature without first reading the PRD and acceptance criteria
 - Never skip the self-review step before handing to QA
 - Never commit secrets, API keys, or `.env` files
-- Never modify `docs/prd-*.md` — that is the product owner's job
+- Never modify `docs/requirements/PRD-*/PRD-*.md` — that is the product owner's job
 - Never deploy — that is the DevOps agent's job
 - Never merge to main directly — always through a PR or explicit user instruction
 - Never silently change scope — if something in the spec is wrong, flag it before building

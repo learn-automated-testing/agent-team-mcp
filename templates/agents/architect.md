@@ -36,7 +36,7 @@ Before starting any task, read these files:
 
 ### When designing a new feature (after PRD, before build):
 1. Read `.claude/state.json` — confirm `current_step` is `design`
-2. Read the PRD: `docs/prd-{feature-name}.md` — particularly the acceptance criteria and any stated NFRs
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md` — particularly the acceptance criteria and any stated NFRs
 3. Read `.claude/context.md` and prior ADRs — what is the system today, what decisions are settled
 4. Identify the **forces** on this design: hard constraints, NFRs, existing components to reuse, deadlines
 5. Sketch options — at least two — with their trade-offs

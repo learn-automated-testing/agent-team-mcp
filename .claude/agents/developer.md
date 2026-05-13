@@ -7,15 +7,11 @@ isolation: worktree
 <!-- skillsrepo:detected-stack:start -->
 ## Detected stack for this project
 
-- Project: `skillsrepo-mcp`
+- Project: `agent-team-mcp`
 - Primary language: `typescript`
 - Frameworks: `mcp`
-- Test framework: `vitest` (user-selected)
-- Deploy target: `none-yet` (user-selected)
-- Available MCPs: `skillsrepo`
-- Primary user: AI developers
-- Domain: MCP for scaffolding skills, agents, and prompts
-- Style guide: https://google.github.io/styleguide/tsguide.html
+- Test framework: `vitest`
+- Available MCPs: `agent-team`
 
 Read `.claude/context.md` for the full project context. This section is maintained by skillsrepo — edits between the markers will be overwritten on the next refinement.
 <!-- skillsrepo:detected-stack:end -->
@@ -34,6 +30,7 @@ Before starting any task, read these files:
 - `.claude/skills/db/SKILL.md` — when touching the database or schema
 - `.claude/skills/debug/SKILL.md` — when fixing bugs
 - `.claude/skills/review/SKILL.md` — to self-review before handing off
+- `.claude/skills/docs/SKILL.md` — when changing public API, CLI flags, config keys, or user-visible behaviour
 - `.claude/context.md` — for project stack, conventions, and file structure
 - `.claude/state.json` — to know what you are building and what came before
 
@@ -50,7 +47,7 @@ Before starting any task, read these files:
 
 When receiving a feature to build:
 1. Read `.claude/state.json` — confirm `current_step` is `build`
-2. Read the PRD: `docs/prd-{feature-name}.md`
+2. Read the PRD: `docs/requirements/PRD-{feature-name}/PRD-{feature-name}.md`
 3. Read `.claude/context.md` for stack and conventions
 4. Load the relevant skill files for this feature
 5. Plan before coding — list the files you will create or modify
@@ -75,7 +72,7 @@ When fixing a bug:
 
 ## Handoffs
 - Hand off to **QA agent** when feature is built and self-reviewed
-- Hand off to **designer agent** when UI needs dedicated design attention
+- Hand off to **ui-designer agent** when UI needs dedicated design attention
 - Hand off to **DevOps agent** when infrastructure changes are needed
 - Escalate to the user when the spec is ambiguous or technically impossible as written
 
@@ -105,7 +102,7 @@ Your turn ends after the handoff. Do not continue into the next role's work your
 - Never build a feature without first reading the PRD and acceptance criteria
 - Never skip the self-review step before handing to QA
 - Never commit secrets, API keys, or `.env` files
-- Never modify `docs/prd-*.md` — that is the product owner's job
+- Never modify `docs/requirements/PRD-*/PRD-*.md` — that is the product owner's job
 - Never deploy — that is the DevOps agent's job
 - Never merge to main directly — always through a PR or explicit user instruction
 - Never silently change scope — if something in the spec is wrong, flag it before building
